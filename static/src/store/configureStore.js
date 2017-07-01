@@ -1,5 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga'
+
 import rootReducer from '../reducers';
 
 const debugware = [];
@@ -12,10 +14,12 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default function configureStore(initialState) {
+    const sagaMiddleware = createSagaMiddleware()
+
     const store = createStore(
         rootReducer,
         initialState,
-        applyMiddleware(thunkMiddleware, ...debugware)
+        applyMiddleware(thunkMiddleware, ...debugware, sagaMiddleware)
     );
 
     if (module.hot) {

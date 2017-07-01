@@ -62,6 +62,7 @@ export function redirectToRoute(route) {
     };
 }
 
+// TODO: SAGA ELIGIBLE
 export function loginUser(email, password) {
     return function (dispatch) {
         dispatch(loginUserRequest());

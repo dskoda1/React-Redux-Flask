@@ -121,7 +121,7 @@ export default class LoginView extends React.Component {
                             <h2>Login to view protected content!</h2>
                             {
                                 this.props.statusText &&
-                                    <div className="alert alert-info">
+                                    <div className="alert alert-error">
                                         {this.props.statusText}
                                     </div>
                             }
