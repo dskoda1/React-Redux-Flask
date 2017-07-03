@@ -24,11 +24,23 @@ def verify_token(token):
         return None
     return data
 
+def get_auth_header(req):
+    json = req.get_json()
+    if not json or 'headers' not in json:
+        return req.headers.get('Authorization', None)
+
+    json = json['headers']
+    if not json or 'Authorization' not in json:
+        return req.headers.get('Authorization', None)
+
+    return json['Authorization']
+
 
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization', None)
+        token = get_auth_header(request)
+
         if token:
             string_token = token.encode('ascii', 'ignore')
             user = verify_token(string_token)

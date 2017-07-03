@@ -20,5 +20,7 @@ export default createReducer(initialState, {
     [FETCH_CATEGORIES]: (state) =>
         Object.assign({}, state, {
             isFetching: true,
+            loaded: false,
+            data: null
         }),
 });

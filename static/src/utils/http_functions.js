@@ -46,3 +46,9 @@ export function data_about_user(token) {
 export function get_category_list(token) {
   return axios.get('api/categories', tokenConfig(token));
 }
+
+export function create_category(token, name) {
+  const body = tokenConfig(token);
+  body['data'] = { name };
+  return axios.post('api/category', body);
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../actions/categories';
+import CreateCategoryModal from './Create'
 
 function mapStateToProps(state) {
     return {
@@ -19,25 +20,35 @@ function mapDispatchToProps(dispatch) {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CategoriesView extends React.Component {
     componentDidMount() {
-        this.fetchData();
+      this.fetchData();
     }
 
-    fetchData() {
+    fetchData = () => {
         const { token } = this.props;
-        this.props.fetchCategories(token);
+        this.props.fetchCategoriesAction(token);
+    }
+
+    createCategory = (name) => {
+      const { token } = this.props;
+      this.props.createCategoryAction(token, name);
     }
 
     render() {
         return (
             <div>
                 {!this.props.loaded
-                    ? <h1>Loading data...</h1>
+                    ? <h1>Loading...</h1>
                     :
                     <div>
+                      <div>
+                        <CreateCategoryModal
+                          submitNewCategory={this.createCategory}
+                        />
+                      </div>
                         <h1>Categories</h1>
                         <ul>
                           {this.props.categories.map(
-                            (category) => <li>{category.name}</li>
+                            (category) => <li key={category.id}>{category.name}</li>
                           )}
                         </ul>
                     </div>
@@ -48,7 +59,8 @@ export default class CategoriesView extends React.Component {
 }
 
 CategoriesView.propTypes = {
-    fetchCategories: React.PropTypes.func,
+    fetchCategoriesAction: React.PropTypes.func,
+    createCategoryAction: React.PropTypes.func,
     loaded: React.PropTypes.bool,
     categories: React.PropTypes.array,
     token: React.PropTypes.string,
