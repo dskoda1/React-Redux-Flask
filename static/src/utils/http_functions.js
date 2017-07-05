@@ -50,5 +50,5 @@ export function get_category_list(token) {
 export function create_category(token, name) {
   const body = tokenConfig(token);
   body['data'] = { name };
-  return axios.post('api/category', body);
+  return axios.post('api/categories', body);
 }

@@ -10,7 +10,7 @@ import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import ProtectedView from './components/ProtectedView';
 import Analytics from './components/Analytics';
-import CategoriesView from './components/Categories';
+import CategoryContainer from './containers/Category';
 import NotFound from './components/NotFound';
 
 import { DetermineAuth } from './components/DetermineAuth';
@@ -24,7 +24,7 @@ export default (
         <Route path="register" component={requireNoAuthentication(RegisterView)} />
         <Route path="home" component={requireNoAuthentication(HomeContainer)} />
         <Route path="analytics" component={requireAuthentication(Analytics)} />
-        <Route path="categories" component={requireAuthentication(CategoriesView)} />
+        <Route path="categories" component={requireAuthentication(CategoryContainer)} />
         <Route path="*" component={DetermineAuth(NotFound)} />
     </Route>
 );

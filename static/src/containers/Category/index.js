@@ -2,7 +2,8 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../../actions/categories';
-import CreateCategoryModal from './Create'
+import CreateCategoryModal from '../../components/Categories/Create'
+import { CategoriesListView } from '../../components/Categories/List'
 
 function mapStateToProps(state) {
     return {
@@ -18,7 +19,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class CategoriesView extends React.Component {
+export default class CategoryContainer extends React.Component {
     componentDidMount() {
       this.fetchData();
     }
@@ -33,32 +34,32 @@ export default class CategoriesView extends React.Component {
       this.props.createCategoryAction(token, name);
     }
 
+    getLoadedComponent = () => {
+      if (this.props.loaded) {
+        return (
+          <CategoriesListView
+            categories={this.props.categories}
+          />
+        )
+      }
+      else {
+        <h1>Loading...</h1>
+      }
+    }
+
     render() {
         return (
             <div>
-                {!this.props.loaded
-                    ? <h1>Loading...</h1>
-                    :
-                    <div>
-                      <div>
-                        <CreateCategoryModal
-                          submitNewCategory={this.createCategory}
-                        />
-                      </div>
-                        <h1>Categories</h1>
-                        <ul>
-                          {this.props.categories.map(
-                            (category) => <li key={category.id}>{category.name}</li>
-                          )}
-                        </ul>
-                    </div>
-                }
+                <CreateCategoryModal
+                  submitNewCategory={this.createCategory}
+                />
+              {this.getLoadedComponent()}
             </div>
         );
     }
 }
 
-CategoriesView.propTypes = {
+CategoryContainer.propTypes = {
     fetchCategoriesAction: React.PropTypes.func,
     createCategoryAction: React.PropTypes.func,
     loaded: React.PropTypes.bool,
