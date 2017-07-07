@@ -47,6 +47,7 @@ def delete_category(category_id):
                     user_id=g.current_user['id'],
                     id=category_id
                 ).first()
+
     if not category:
         return jsonify(message='Category not found'), 404
 

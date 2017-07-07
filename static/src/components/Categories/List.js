@@ -1,16 +1,23 @@
 import React from 'react';
 
-export const CategoriesListView = (props) =>
+import { Category } from './Category';
 
+export const CategoriesListView = (props) => (
       <div>
-          <h1>Categories</h1>
-          <ul>
-            {props.categories.map(
-              (category) => <li key={category.id}>{category.name}</li>
-            )}
-          </ul>
+        {props.categories.map(
+          (category) =>
+            <Category
+              {...category}
+              deleteCategory={props.deleteCategory}
+              key={category.id}
+            />
+        )}
+
       </div>
+    )
 
 CategoriesListView.propTypes = {
-  categories: React.PropTypes.array
+  categories: React.PropTypes.array,
+  deleteCategory: React.PropTypes.func,
+  // createPurchaseAction: React.PropTypes.func,
 };

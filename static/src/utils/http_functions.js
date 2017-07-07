@@ -52,3 +52,7 @@ export function create_category(token, name) {
   body['data'] = { name };
   return axios.post('api/categories', body);
 }
+
+export function delete_category(token, id) {
+  return axios.delete(`api/categories/${id}`, tokenConfig(token));
+}

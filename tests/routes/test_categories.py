@@ -154,6 +154,7 @@ class TestCategories(BaseTestConfig):
 
         res = self.app.delete(
             CATEGORIES_URL + '/{}'.format(cat_id),
+            # this uses the first users auth
             headers=self.headers
         )
 

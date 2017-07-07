@@ -3,11 +3,17 @@ import {
   RECEIVE_CATEGORIES,
   CREATE_CATEGORY,
   CREATE_CATEGORY_SUCCESS,
-  CREATE_CATEGORY_FAIL
+  CREATE_CATEGORY_FAIL,
+  DELETE_CATEGORY,
+  DELETE_CATEGORY_FAIL,
 } from '../constants/index'
 
 import { parseJSON } from '../utils/misc';
-import { get_category_list, create_category } from '../utils/http_functions';
+import {
+  get_category_list,
+  create_category,
+  delete_category
+} from '../utils/http_functions';
 
 
 /*********************************
@@ -72,5 +78,31 @@ export function createCategoryAction(token, name) {
           console.log('Failed to create category')
           console.log(error);
         })
+  }
+}
+
+/*********************************
+* Actions related to /categories DELETE
+**********************************/
+export function deleteCategoryRequest() {
+  return {
+    type: DELETE_CATEGORY
+  }
+}
+
+export function deleteCategoryAction(token, id) {
+  console.log('In delete category action');
+  return (dispatch) => {
+    dispatch(deleteCategoryRequest());
+    delete_category(token, id)
+      .then(parseJSON)
+      .then(response => {
+        fetchCategoriesAction(token)(dispatch);
+      })
+      .catch(error => {
+        // TODO: Delete category fail action?
+        console.log('Failed to delete category')
+        console.log(error);
+      })
   }
 }
