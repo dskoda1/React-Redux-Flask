@@ -11,7 +11,6 @@ class Category(db.Model):
                     user_id=user_id
                 ).all()
 
-
     def attr(self):
         return {
             'id': self.id,

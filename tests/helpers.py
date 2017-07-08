@@ -1,6 +1,10 @@
 import json
 
+from application.models import Category
+
 APP_JSON = 'application/json'
+
+
 
 def create_user(user_info, app_client):
     """
@@ -16,3 +20,16 @@ def create_user(user_info, app_client):
     )
     res = json.loads(res.data.decode("utf-8"))
     return res['id'], res['token']
+
+
+def create_categories(db, user_id, num_to_insert):
+    cat_ids = []
+    for i in range(num_to_insert):
+        c = Category(
+            name='category-{}-{}'.format(i, randint(0, 10000)),
+            user_id=user_id
+        )
+        db.session.add(c)
+        db.session.commit()
+        cat_ids.append(c.id)
+    return cat_ids

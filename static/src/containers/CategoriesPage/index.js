@@ -1,6 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Paper } from 'material-ui';
+
 import * as categoryActions from '../../actions/categories';
 import * as notificationActions from '../../actions/notification';
 
@@ -9,6 +11,14 @@ import CreateCategoryModal from '../../components/Categories/Create'
 // This one is not exported as default, note pure functions can't be?
 import { CategoriesListView } from '../../components/Categories/List'
 
+const style = {
+    marginTop: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
+    width: '100%',
+    textAlign: 'center',
+    display: 'inline-block',
+};
 
 function mapStateToProps(state) {
     return {
@@ -52,12 +62,19 @@ export default class CategoriesPage extends React.Component {
     }
 
     getLoadedComponent = () => {
-      if (this.props.loaded) {
+      if (this.props.loaded && this.props.categories.length) {
         return (
           <CategoriesListView
             categories={this.props.categories}
             deleteCategory={this.deleteCategory}
           />
+        )
+      }
+      else if (this.props.loaded && !this.props.categories.length) {
+        return (
+          <Paper style={style}>
+            <h3>Why don't you create a category?</h3>
+          </Paper>
         )
       }
       else {

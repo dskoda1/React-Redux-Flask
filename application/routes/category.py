@@ -3,6 +3,7 @@ from application.models import Category
 from index import app, db
 from sqlalchemy.exc import IntegrityError
 from application.utils import Http, requires_auth
+from application.urls import Urls
 
 def cat_helper(cat):
     return {
@@ -10,14 +11,14 @@ def cat_helper(cat):
         'id': ++id
     }
 
-@app.route('/api/categories', methods=[Http.GET])
+@app.route(Urls.CATEGORIES, methods=[Http.GET])
 @requires_auth
 def get_categories():
     cats = Category.get_user_categories(user_id=g.current_user['id'])
     return jsonify(result=[category.attr() for category in cats]), 200
 
 
-@app.route('/api/categories', methods=[Http.POST])
+@app.route(Urls.CATEGORIES, methods=[Http.POST])
 @requires_auth
 def create_category():
     incoming = request.get_json()
@@ -39,7 +40,7 @@ def create_category():
 
     return jsonify({}), 201
 
-@app.route('/api/categories/<category_id>', methods=[Http.DELETE])
+@app.route(Urls.CATEGORIES + '/<category_id>', methods=[Http.DELETE])
 @requires_auth
 def delete_category(category_id):
 

@@ -26,7 +26,9 @@ const buttonProps = {
 
 export const Category = (props) => (
   <Paper style={style}>
-    {props.name}
+    <span className="pull-left">
+      {props.name}
+    </span>
     <span className="pull-right">
       <FloatingActionButton
         {...buttonProps}

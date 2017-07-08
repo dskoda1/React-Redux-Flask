@@ -2,12 +2,15 @@ import json
 from copy import deepcopy
 from random import randint
 from testing_config import BaseTestConfig
+from application.urls import Urls
 from application.models import User, Category
 from application.utils import auth
-from tests.helpers import create_user, APP_JSON
+from tests.helpers import \
+    create_user, \
+    create_categories, \
+    APP_JSON
 
 NUM_CATEGORIES = 5
-CATEGORIES_URL = '/api/categories'
 
 
 class TestCategories(BaseTestConfig):
@@ -42,7 +45,7 @@ class TestCategories(BaseTestConfig):
 
         # create another user and a category for it
 
-        res = self.app.get(CATEGORIES_URL, headers=self.headers)
+        res = self.app.get(Urls.CATEGORIES, headers=self.headers)
         self.assertEqual(res.status_code, 200)
         # Should only be the 5 for our user
         self.assertEqual(len(Category.query.all()), NUM_CATEGORIES)
@@ -70,7 +73,7 @@ class TestCategories(BaseTestConfig):
             user_id=user_2_id
         )
 
-        res = self.app.get(CATEGORIES_URL, headers=self.headers)
+        res = self.app.get(Urls.CATEGORIES, headers=self.headers)
         self.assertEqual(res.status_code, 200)
         # Should only be the 5 for our user
         [
@@ -82,7 +85,7 @@ class TestCategories(BaseTestConfig):
         self._additional_set_up()
 
         res = self.app.post(
-                    CATEGORIES_URL,
+                    Urls.CATEGORIES,
                     headers=self.headers,
                     data=json.dumps(self.category),
                     content_type=APP_JSON
@@ -95,14 +98,14 @@ class TestCategories(BaseTestConfig):
         self._additional_set_up()
 
         res_1 = self.app.post(
-                    CATEGORIES_URL,
+                    Urls.CATEGORIES,
                     headers=self.headers,
                     data=json.dumps(self.category),
                     content_type=APP_JSON
                 )
 
         res_2 = self.app.post(
-                    CATEGORIES_URL,
+                    Urls.CATEGORIES,
                     headers=self.headers,
                     data=json.dumps(self.category),
                     content_type=APP_JSON
@@ -117,7 +120,7 @@ class TestCategories(BaseTestConfig):
         cat_id = self._insert_categories(1, self.user_id)[0]
 
         res = self.app.delete(
-                CATEGORIES_URL + '/{}'.format(cat_id),
+                Urls.CATEGORIES + '/{}'.format(cat_id),
                 headers=self.headers
         )
         self.assertEqual(res.status_code, 200)
@@ -128,7 +131,7 @@ class TestCategories(BaseTestConfig):
         self._additional_set_up()
 
         res = self.app.delete(
-                CATEGORIES_URL + '/10',
+                Urls.CATEGORIES + '/10',
                 headers=self.headers
         )
         self.assertEqual(res.status_code, 404)
@@ -153,7 +156,7 @@ class TestCategories(BaseTestConfig):
         )[0]
 
         res = self.app.delete(
-            CATEGORIES_URL + '/{}'.format(cat_id),
+            Urls.CATEGORIES + '/{}'.format(cat_id),
             # this uses the first users auth
             headers=self.headers
         )
