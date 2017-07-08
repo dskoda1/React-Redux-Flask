@@ -27,7 +27,12 @@ app.use(require('morgan')('short'));
 }());
 
 app.all(/^\/api\/(.*)/, (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:5000' });
+    // Prevent the service being down from crashing webpack
+    try {
+        proxy.web(req, res, { target: 'http://localhost:5000' });
+    } catch (err) {
+        console.log('Proxy server request failed:' + err);
+    }
 });
 
 app.get(/.*/, (req, res) => {

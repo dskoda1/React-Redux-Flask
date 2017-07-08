@@ -5,6 +5,8 @@ import {
   TextField,
   Dialog
 } from 'material-ui';
+import ContentRemove from 'material-ui/svg-icons/content/remove';
+
 
 const g_defaultErrorText = 'Name can\'t be blank.'
 

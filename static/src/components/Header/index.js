@@ -37,16 +37,13 @@ export class Header extends Component {
         this.setState({
             open: false,
         });
-
     }
-
 
     handleClickOutside() {
         this.setState({
             open: false,
         });
     }
-
 
     logout(e) {
         e.preventDefault();

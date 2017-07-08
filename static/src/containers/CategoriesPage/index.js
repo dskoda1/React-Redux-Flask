@@ -1,14 +1,14 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actionCreators from '../../actions/categories';
+import * as categoryActions from '../../actions/categories';
+import * as notificationActions from '../../actions/notification';
+
 // This one is exported as default
 import CreateCategoryModal from '../../components/Categories/Create'
 // This one is not exported as default, note pure functions can't be?
 import { CategoriesListView } from '../../components/Categories/List'
-import {
-  Snackbar
-} from 'material-ui';
+
 
 function mapStateToProps(state) {
     return {
@@ -20,18 +20,14 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+    return {
+      notificationActions: bindActionCreators(notificationActions, dispatch),
+      categoryActions: bindActionCreators(categoryActions, dispatch)
+    }
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CategoriesPage extends React.Component {
-
-    componentWillMount() {
-        this.state = {
-            snackBarOpen: false,
-            snackBarMessage: ''
-        };
-    }
 
     componentDidMount() {
       this.fetchData();
@@ -39,22 +35,20 @@ export default class CategoriesPage extends React.Component {
 
     fetchData = () => {
         const { token } = this.props;
-        this.props.fetchCategoriesAction(token);
+        this.props.categoryActions.fetchCategoriesAction(token);
     }
 
     createCategory = (name) => {
       const { token } = this.props;
-      this.props.createCategoryAction(token, name);
+      this.props.categoryActions.createCategoryAction(token, name);
+      this.props.notificationActions.createNotification(`Created category '${name}' successfully.`)
+
     }
 
     deleteCategory = (id, name) => {
       const { token } = this.props;
-      // TODO: dispatch an action for the snack bar in here
-      this.props.deleteCategoryAction(token, id);
-      this.setState({
-        snackBarOpen: true,
-        snackBarMessage: `Deleted category '${name}' successfully.`
-      })
+      this.props.categoryActions.deleteCategoryAction(token, id);
+      this.props.notificationActions.createNotification(`Deleted category '${name}' successfully.`)
     }
 
     getLoadedComponent = () => {
@@ -73,35 +67,35 @@ export default class CategoriesPage extends React.Component {
 
     render() {
         return (
-            <div className="flex">
-
-              <div className="col-md-6">
-                <h1>Categories</h1>
-              </div>
-              <div className="col-md-6">
-                <span className="pull-right">
-                <CreateCategoryModal
-                  submitNewCategory={this.createCategory}
-                />
-                </span>
-              </div>
-
+            <div>
+                <h1>
+                  <span className="pull-left">
+                    Categories
+                  </span>
+                  <span className="pull-right">
+                    <CreateCategoryModal
+                      submitNewCategory={this.createCategory}
+                    />
+                  </span>
+                </h1>
               {this.getLoadedComponent()}
-              <Snackbar
-                open={this.state.snackBarOpen}
-                message={this.state.snackBarMessage}
-                autoHideDuration={4000}
-              />
             </div>
         );
     }
 }
 
+// TODO: Nested validation here
 CategoriesPage.propTypes = {
     // Redux Action functions
-    fetchCategoriesAction: React.PropTypes.func,
-    createCategoryAction: React.PropTypes.func,
-    deleteCategoryAction: React.PropTypes.func,
+    categoryActions: React.PropTypes.object,/*.PropTypes = {*/
+    //   fetchCategoriesAction: React.PropTypes.func,
+    //   createCategoryAction: React.PropTypes.func,
+    //   deleteCategoryAction: React.PropTypes.func
+    // },
+    notificationActions: React.PropTypes.object,/*.PropTypes = {*/
+    //   startNotification: React.PropTypes.func,
+    //   endNotification: React.PropTypes.func,
+    // },
     // createPurchaseAction: React.PropTypes.func,
     // Other props
     loaded: React.PropTypes.bool,

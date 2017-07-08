@@ -1,4 +1,5 @@
 import {
+  // Category constants
   FETCH_CATEGORIES,
   RECEIVE_CATEGORIES,
   CREATE_CATEGORY,
@@ -7,6 +8,9 @@ import {
   DELETE_CATEGORY,
   DELETE_CATEGORY_FAIL,
 } from '../constants/index'
+import {
+  createNotification
+} from './notification';
 
 import { parseJSON } from '../utils/misc';
 import {
@@ -75,7 +79,9 @@ export function createCategoryAction(token, name) {
           fetchCategoriesAction(token)(dispatch);
         })
         .catch(error => {
-          console.log('Failed to create category')
+          const msg = `Failed to create category ${name}`;
+          dispatch(createNotification(msg))
+          console.log(msg)
           console.log(error);
         })
   }
@@ -100,8 +106,9 @@ export function deleteCategoryAction(token, id) {
         fetchCategoriesAction(token)(dispatch);
       })
       .catch(error => {
-        // TODO: Delete category fail action?
-        console.log('Failed to delete category')
+        const msg = `Failed to delete category ${name}`;
+        dispatch(createNotification(msg))
+        console.log(msg)
         console.log(error);
       })
   }

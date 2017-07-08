@@ -24,7 +24,6 @@ export function loginUserSuccess(token) {
     };
 }
 
-
 export function loginUserFailure(error) {
     localStorage.removeItem('token');
     return {

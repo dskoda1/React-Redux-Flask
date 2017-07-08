@@ -8,8 +8,16 @@ const tokenConfig = (token) => ({
     },
 });
 
+const executeRequest = (method, url, body) => {
+  try {
+    return axios[method](url, body);
+  } catch (err) {
+    console.log(`${method} request to ${url} faild with error:\n${error}`);
+  }
+}
+
 export function validate_token(token) {
-    return axios.post('/api/is_token_valid', {
+    return executeRequest('post', '/api/is_token_valid', {
         token,
     });
 }
@@ -22,37 +30,37 @@ export function get_github_access() {
 }
 
 export function create_user(email, password) {
-    return axios.post('api/create_user', {
+    return executeRequest('post', 'api/create_user', {
         email,
         password,
     });
 }
 
 export function get_token(email, password) {
-    return axios.post('api/get_token', {
+    return executeRequest('post', 'api/get_token', {
         email,
         password,
     });
 }
 
 export function has_github_token(token) {
-    return axios.get('api/has_github_token', tokenConfig(token));
+    return executeRequest('get', 'api/has_github_token', tokenConfig(token));
 }
 
 export function data_about_user(token) {
-    return axios.get('api/user', tokenConfig(token));
+    return executeRequest('get', 'api/user', tokenConfig(token));
 }
 
 export function get_category_list(token) {
-  return axios.get('api/categories', tokenConfig(token));
+  return executeRequest('get', 'api/categories', tokenConfig(token));
 }
 
 export function create_category(token, name) {
   const body = tokenConfig(token);
   body['data'] = { name };
-  return axios.post('api/categories', body);
+  return executeRequest('post', 'api/categories', body);
 }
 
 export function delete_category(token, id) {
-  return axios.delete(`api/categories/${id}`, tokenConfig(token));
+  return executeRequest('delete', `api/categories/${id}`, tokenConfig(token));
 }

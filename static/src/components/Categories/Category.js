@@ -2,8 +2,10 @@ import React from 'react';
 
 import { Paper } from 'material-ui';
 import {
-  RaisedButton,
+  FloatingActionButton,
 } from 'material-ui';
+import ContentRemove from 'material-ui/svg-icons/content/remove';
+
 const style = {
     marginTop: 10,
     paddingBottom: 5,
@@ -13,14 +15,26 @@ const style = {
     display: 'inline-block',
 };
 
+const buttonStyle = {
+  marginRight: 20
+}
+
+const buttonProps = {
+  mini: true,
+  secondary: true
+}
+
 export const Category = (props) => (
   <Paper style={style}>
     {props.name}
     <span className="pull-right">
-      <RaisedButton
-        label="Delete"
+      <FloatingActionButton
+        {...buttonProps}
+        style={buttonStyle}
         onTouchTap={() => props.deleteCategory(props.id, props.name)}
-      />
+      >
+        <ContentRemove />
+      </FloatingActionButton>
     </span>
   </Paper>
 )
