@@ -1,6 +1,5 @@
 import json
 from copy import deepcopy
-from random import randint
 from testing_config import BaseTestConfig
 from application.urls import Urls
 from application.models import User, Category
@@ -20,27 +19,16 @@ class TestCategories(BaseTestConfig):
         }
     }
 
-    def _insert_categories(self, num_to_insert, user_id):
-        cat_ids = []
-        for i in range(num_to_insert):
-            c = Category(
-                name='category-{}-{}'.format(i, randint(0, 10000)),
-                user_id=user_id
-            )
-            self.db.session.add(c)
-            self.db.session.commit()
-            cat_ids.append(c.id)
-        return cat_ids
-
     def _additional_set_up(self):
         self.category['data']['user_id'] = self.user_id
         self.assertEqual(len(Category.query.all()), 0)
 
     def test_get_users_categories(self):
         self._additional_set_up()
-        self._insert_categories(
+        create_categories(
+            db=self.db,
+            user_id=self.user_id,
             num_to_insert=NUM_CATEGORIES,
-            user_id=self.user_id
         )
 
         # create another user and a category for it
@@ -57,9 +45,10 @@ class TestCategories(BaseTestConfig):
     def test_only_gets_authed_users_categories(self):
         self._additional_set_up()
         # Insert the first users categories
-        self._insert_categories(
+        create_categories(
+            db=self.db,
+            user_id=self.user_id,
             num_to_insert=1,
-            user_id=self.user_id
         )
         # Create another user and a category for it
         user_2_id, user_2_token = create_user(
@@ -68,9 +57,10 @@ class TestCategories(BaseTestConfig):
             },
             app_client=self.app
         )
-        self._insert_categories(
+        create_categories(
+            db=self.db,
+            user_id=user_2_id,
             num_to_insert=1,
-            user_id=user_2_id
         )
 
         res = self.app.get(Urls.CATEGORIES, headers=self.headers)
@@ -117,7 +107,11 @@ class TestCategories(BaseTestConfig):
     def test_delete_category(self):
         self._additional_set_up()
         # insert a single category and get it's id
-        cat_id = self._insert_categories(1, self.user_id)[0]
+        cat_id = create_categories(
+            db=self.db,
+            user_id=self.user_id,
+            num_to_insert=1,
+        )[0]
 
         res = self.app.delete(
                 Urls.CATEGORIES + '/{}'.format(cat_id),
@@ -139,9 +133,10 @@ class TestCategories(BaseTestConfig):
     def test_cant_delete_others_category(self):
         self._additional_set_up()
         # Insert the first users categories
-        self._insert_categories(
+        create_categories(
+            db=self.db,
+            user_id=self.user_id,
             num_to_insert=1,
-            user_id=self.user_id
         )
         # Create another user and a category for it
         user_2_id, user_2_token = create_user(
@@ -150,9 +145,10 @@ class TestCategories(BaseTestConfig):
             },
             app_client=self.app
         )
-        cat_id = self._insert_categories(
+        cat_id = create_categories(
+            db=self.db,
+            user_id=user_2_id,
             num_to_insert=1,
-            user_id=user_2_id
         )[0]
 
         res = self.app.delete(

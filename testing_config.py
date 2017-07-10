@@ -35,6 +35,9 @@ class BaseTestConfig(TestCase):
         self.headers = {
                 'Authorization': self.token,
             }
+        self.kwargs = {
+            'headers'
+        }
 
     def tearDown(self):
         db.session.remove()
